@@ -6,25 +6,27 @@ m&b refers to text.
 """
 
 from math import fabs, cos, sin, cosh, sinh, hypot, pi
-TOL = 1e-6
+TOL_MIN = 1e-6
+#TOL_MAX = 1e6
 
-def velocity(ha, asp, y_co, z_co):
+def velocity(h, a, y, z):
     """Return final velocity at some point in domain.
     From the fourier modes of y and z contributions.
     """
     i = 1
     u = 0.0
     
-    uiy = u_y(ha, asp, i, y_co)
-    uiz = u_z(asp, z_co, i)
+    #uiy = u_y(h, a, i, y)
+    #uiz = u_z(a, z, i)
 
     while 1: 
-        uiy = u_y(ha, asp, y_co, i)
-        uiz = u_z(asp, z_co, i)
+        uiy = u_y(h, a, y, i)
+        uiz = u_z(a, z, i)
 
         if fabs(uiy*uiz) <= TOL:
             break
         u += uiy*uiz
+        print u, i
         i += 2
         
         
@@ -34,12 +36,17 @@ def u_z(a, z, i):
     """The z contribution to velocity from formulae in m&b
     Oneliner form is better. Lambda form is complicated to use?
     """
-    return cos(0.5*i*pi*a*z)
+    temp = cos(0.5*i*pi*a*z)
+    #p = "u(z) is ", temp, "\n"
+    #print(p)
+    return temp
 
 def f(y, p1, p2):
     """intermediary function for u_y computation
     """
-    return sinh(p1)*cosh(p2*y)-sinh(p2)*cosh(p1*y)
+    temp = sinh(p1)*cosh(p2*y)-sinh(p2)*cosh(p1*y)
+    print temp
+    return temp
 
 def u_y(h, a, y, i):
     """The y contribution of velocity, from formula.
